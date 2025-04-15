@@ -1,4 +1,4 @@
-package com.example.goforawalk_android.ui.theme
+package com.yjdev.goforawalk.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

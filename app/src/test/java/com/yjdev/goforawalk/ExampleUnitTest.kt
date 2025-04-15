@@ -1,4 +1,4 @@
-package com.example.goforawalk_android
+package com.yjdev.goforawalk
 
 import org.junit.Test
 

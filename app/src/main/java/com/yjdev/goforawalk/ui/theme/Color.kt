@@ -1,4 +1,4 @@
-package com.example.goforawalk_android.ui.theme
+package com.yjdev.goforawalk.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.goforawalk_android"
+    namespace = "com.yjdev.goforawalk"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.goforawalk_android"
+        applicationId = "com.yjdev.goforawalk"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

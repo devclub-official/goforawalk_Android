@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.retrofit.scalars)
     implementation(libs.retrofit.gson)
     implementation(libs.dagger.hilt)
+    implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.hilt.compose)
     ksp(libs.dagger.hilt.compiler)
     testImplementation(libs.junit)

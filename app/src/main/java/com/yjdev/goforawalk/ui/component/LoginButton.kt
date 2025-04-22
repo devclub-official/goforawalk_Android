@@ -42,7 +42,7 @@ fun LoginButton(containerColor: Color, contentColor: Color, borderColor: Color, 
         }
 
         is LoginUiState.Success -> {
-            Log.i("LoginButton", "로그인 성공: ${(loginState as LoginUiState.Success).accessToken}")
+            Log.i("LoginButton", "로그인 성공}")
         }
 
         is LoginUiState.Failure -> {

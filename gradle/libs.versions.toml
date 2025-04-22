@@ -12,6 +12,7 @@ kakao = "2.11.0"
 retrofit = "2.9.0"
 hilt = "2.51.1"
 ksp = "2.0.0-1.0.22"
+hiltCompose = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,7 @@ retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref 
 retrofit-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
 dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+androidx-hilt-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompose" }
 
 
 [plugins]

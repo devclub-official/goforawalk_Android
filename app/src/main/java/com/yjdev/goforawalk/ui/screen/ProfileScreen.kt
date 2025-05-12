@@ -1,6 +1,5 @@
 package com.yjdev.goforawalk.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.yjdev.goforawalk.ui.theme.Goforawalk_AndroidTheme
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(onSettingsClick: () -> Unit) {
     Goforawalk_AndroidTheme {
         Column(
             modifier = Modifier
@@ -50,7 +49,7 @@ fun ProfileScreen() {
                     contentDescription = "설정",
                     modifier = Modifier
                         .size(20.dp)
-                        .clickable {}
+                        .clickable { onSettingsClick() }
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))

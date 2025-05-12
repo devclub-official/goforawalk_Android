@@ -62,7 +62,8 @@ fun MainScreen() {
                     HomeScreen(emptyList())
                 }
                 composable(Screen.Certify.route) { CertifyScreen() }
-                composable(Screen.Profile.route) { ProfileScreen() }
+                composable(Screen.Profile.route) { ProfileScreen(onSettingsClick = { navController.navigate(Screen.Settings.route) }) }
+                composable(Screen.Settings.route) { SettingsScreen(onBack = { navController.popBackStack() }) }
             }
         }
     }

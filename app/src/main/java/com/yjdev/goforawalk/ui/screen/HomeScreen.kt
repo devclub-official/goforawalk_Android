@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.yjdev.goforawalk.data.Feed
+import com.yjdev.goforawalk.ui.component.FeedCard
 import com.yjdev.goforawalk.ui.theme.Goforawalk_AndroidTheme
 
 @Composable
@@ -55,6 +56,7 @@ fun HomeScreen(feedList: List<Feed>) {
             } else {
                 LazyColumn {
                     items(feedList) { feed ->
+                        FeedCard(feed)
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }

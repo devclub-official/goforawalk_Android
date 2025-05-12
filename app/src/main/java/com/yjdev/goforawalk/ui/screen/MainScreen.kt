@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.yjdev.goforawalk.data.Feed
 import com.yjdev.goforawalk.data.Screen
 import com.yjdev.goforawalk.ui.theme.Goforawalk_AndroidTheme
 
@@ -59,7 +60,35 @@ fun MainScreen() {
         ) { innerPadding ->
             NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
                 composable(Screen.Home.route) {
-                    HomeScreen(emptyList())
+                    HomeScreen(
+                        //TODO 테스트 값 나중에 실제 list값으로 변경 필요
+                        listOf(
+                            Feed(
+                                "닉네임",
+                                "3",
+                                "2025년 6월 28일",
+                                "30분전",
+                                "설명..........",
+                                "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+                            ),
+                            Feed(
+                                "닉네임",
+                                "3",
+                                "2025년 6월 28일",
+                                "30분전",
+                                "설명..........",
+                                "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+                            ),
+                            Feed(
+                                "닉네임",
+                                "3",
+                                "2025년 6월 28일",
+                                "30분전",
+                                "설명..........",
+                                "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+                            )
+                        )
+                    )
                 }
                 composable(Screen.Certify.route) { CertifyScreen() }
                 composable(Screen.Profile.route) { ProfileScreen(onSettingsClick = { navController.navigate(Screen.Settings.route) }) }

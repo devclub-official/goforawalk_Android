@@ -27,33 +27,36 @@ fun MainScreen() {
     val items = listOf(Screen.Home, Screen.Certify, Screen.Profile)
 
     Goforawalk_AndroidTheme {
+        val currentRoute = currentRoute(navController)
+
         Scaffold(
             bottomBar = {
-                NavigationBar {
-                    val currentRoute = currentRoute(navController)
-                    items.forEach { screen ->
-                        NavigationBarItem(
-                            selected = currentRoute == screen.route,
-                            onClick = {
-                                if (currentRoute != screen.route) {
-                                    navController.navigate(screen.route) {
-                                        popUpTo(Screen.Home.route) { inclusive = false }
-                                        launchSingleTop = true
+                if (currentRoute in listOf(Screen.Home.route, Screen.Profile.route)) {
+                    NavigationBar {
+                        items.forEach { screen ->
+                            NavigationBarItem(
+                                selected = currentRoute == screen.route,
+                                onClick = {
+                                    if (currentRoute != screen.route) {
+                                        navController.navigate(screen.route) {
+                                            popUpTo(Screen.Home.route) { inclusive = false }
+                                            launchSingleTop = true
+                                        }
                                     }
-                                }
-                            },
-                            icon = { Icon(painterResource(id = screen.icon), contentDescription = screen.label) },
-                            label = { Text(screen.label) },
-                            colors = NavigationBarItemColors(
-                                selectedIconColor = Color(0xFF109624),
-                                selectedTextColor = Color(0xFF109624),
-                                selectedIndicatorColor = Color.Transparent,
-                                unselectedIconColor = Color.Gray,
-                                unselectedTextColor = Color.Gray,
-                                disabledIconColor = Color.LightGray,
-                                disabledTextColor = Color.LightGray
+                                },
+                                icon = { Icon(painterResource(id = screen.icon), contentDescription = screen.label) },
+                                label = { Text(screen.label) },
+                                colors = NavigationBarItemColors(
+                                    selectedIconColor = Color(0xFF109624),
+                                    selectedTextColor = Color(0xFF109624),
+                                    selectedIndicatorColor = Color.Transparent,
+                                    unselectedIconColor = Color.Gray,
+                                    unselectedTextColor = Color.Gray,
+                                    disabledIconColor = Color.LightGray,
+                                    disabledTextColor = Color.LightGray
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

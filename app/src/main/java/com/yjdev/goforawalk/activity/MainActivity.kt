@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.yjdev.goforawalk.ui.screen.LoginScreen
 import com.yjdev.goforawalk.ui.screen.MainScreen
+import com.yjdev.goforawalk.ui.screen.RequestCameraPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -16,6 +16,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            LoginScreen()
             MainScreen()
+            RequestCameraPermission()
         }
     }
 }

@@ -17,6 +17,8 @@ securityCrypto = "1.1.0-alpha06"
 naviCompose = "2.8.9"
 material3 = "1.3.2"
 coil = "2.4.0"
+camera = "1.2.0"
+accompanist = "0.35.0-alpha"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,7 +35,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
-kakao-user = {module = "com.kakao.sdk:v2-user", version.ref = "kakao"}
+kakao-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakao" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 retrofit-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
@@ -41,8 +43,13 @@ dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" 
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 androidx-hilt-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompose" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
-compose-navigation = {group = "androidx.navigation", name = "navigation-compose", version.ref = "naviCompose"}
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "naviCompose" }
 compose-coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+androidx-camera = { module = "androidx.camera:camera-camera2", version.ref = "camera" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camera" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "camera" }
+androidx-camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "camera" }
+google-accompanist = {module = "com.google.accompanist:accompanist-permissions",version.ref = "accompanist"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

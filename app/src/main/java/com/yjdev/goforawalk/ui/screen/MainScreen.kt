@@ -1,5 +1,6 @@
 package com.yjdev.goforawalk.ui.screen
 
+import android.Manifest
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -8,6 +9,7 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +19,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.yjdev.goforawalk.data.Feed
 import com.yjdev.goforawalk.data.Screen
 import com.yjdev.goforawalk.ui.theme.Goforawalk_AndroidTheme
@@ -105,4 +109,14 @@ fun MainScreen() {
 fun currentRoute(navController: NavHostController): String? {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     return navBackStackEntry?.destination?.route
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestCameraPermission() {
+    val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
+
+    LaunchedEffect(Unit) {
+        cameraPermissionState.launchPermissionRequest()
+    }
 }

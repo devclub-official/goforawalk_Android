@@ -41,7 +41,7 @@ fun AppNavigation() {
             LoginScreen(viewModel = viewModel)
         }
         composable("main") {
-            MainScreen()
+            MainScreen(viewModel = viewModel)
         }
     }
 }

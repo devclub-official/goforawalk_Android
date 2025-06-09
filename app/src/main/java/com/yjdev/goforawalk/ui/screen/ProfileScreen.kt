@@ -24,10 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.yjdev.goforawalk.data.Profile
 import com.yjdev.goforawalk.ui.theme.Goforawalk_AndroidTheme
 
 @Composable
-fun ProfileScreen(onSettingsClick: () -> Unit) {
+fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
     Goforawalk_AndroidTheme {
         Column(
             modifier = Modifier
@@ -59,7 +60,7 @@ fun ProfileScreen(onSettingsClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "닉네임 최대 8글자",
+                    text = profile.userNickname,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
                 )
@@ -78,7 +79,7 @@ fun ProfileScreen(onSettingsClick: () -> Unit) {
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "42",
+                        text = "${profile.totalFootStepCount}",
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium
                     )
@@ -91,7 +92,7 @@ fun ProfileScreen(onSettingsClick: () -> Unit) {
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "13",
+                        text = "${profile.footStepStreakDays}",
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
                         style = MaterialTheme.typography.titleMedium

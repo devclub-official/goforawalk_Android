@@ -26,10 +26,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.yjdev.goforawalk.data.Feed
+import com.yjdev.goforawalk.data.FootStep
 
 @Composable
-fun FeedCard(feed: Feed) {
+fun FootStepCard(footStep: FootStep) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -47,8 +47,8 @@ fun FeedCard(feed: Feed) {
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = feed.nickname, fontWeight = FontWeight.Bold)
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "메뉴")
+                Text(text = footStep.userNickname, fontWeight = FontWeight.Bold)
+                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "more menu")
             }
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -60,7 +60,7 @@ fun FeedCard(feed: Feed) {
                     .height(200.dp)
             ) {
                 AsyncImage(
-                    model = feed.imageUrl,
+                    model = footStep.imageUrl,
                     contentDescription = "피드 이미지",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.matchParentSize()
@@ -71,8 +71,8 @@ fun FeedCard(feed: Feed) {
                         .align(Alignment.TopStart)
                         .padding(8.dp),
                 ) {
-                    Text("걷는 ${feed.streak}일 연속", color = Color.White)
-                    Text(feed.date, color = Color.White, fontSize = 12.sp)
+                    Text("걷는 ${1}일 연속", color = Color.White)
+                    Text(footStep.date, color = Color.White, fontSize = 12.sp)
                 }
             }
 
@@ -85,14 +85,14 @@ fun FeedCard(feed: Feed) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = feed.description,
+                    text = footStep.content,
                     color = Color.Gray,
                     fontSize = 14.sp,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Text(text = feed.timeAgo, fontSize = 12.sp, color = Color.Gray)
+                Text(text = footStep.date, fontSize = 12.sp, color = Color.Gray)
             }
             Spacer(modifier = Modifier.height(4.dp))
         }

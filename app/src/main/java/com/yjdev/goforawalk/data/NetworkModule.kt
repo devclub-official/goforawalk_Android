@@ -1,6 +1,6 @@
 package com.yjdev.goforawalk.data
 
-import com.yjdev.goforawalk.AuthService
+import com.yjdev.goforawalk.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,11 +12,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
-    fun provideAuthService(): AuthService {
+    fun provideAuthService(): ApiService {
         return Retrofit.Builder()
             .baseUrl("https://api.goforawalk.site")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(AuthService::class.java)
+            .create(ApiService::class.java)
     }
 }

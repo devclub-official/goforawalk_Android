@@ -15,15 +15,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yjdev.goforawalk.MainViewModel
 import com.yjdev.goforawalk.R
 import com.yjdev.goforawalk.ui.component.LoginButton
 import com.yjdev.goforawalk.ui.theme.Black3A1D1D
 import com.yjdev.goforawalk.ui.theme.Gray757990
-import com.yjdev.goforawalk.ui.theme.GrayDDDDDD
 import com.yjdev.goforawalk.ui.theme.YellowFEE500
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(viewModel: MainViewModel) {
     Column(
         modifier = Modifier
             .background(Color.White)
@@ -50,10 +50,7 @@ fun LoginScreen() {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        LoginButton(YellowFEE500, Black3A1D1D, YellowFEE500, stringResource(R.string.login_kakao))
-        Spacer(modifier = Modifier.height(16.dp))
-        LoginButton(Color.White, Color.DarkGray, GrayDDDDDD, stringResource(R.string.login_google))
-        Spacer(modifier = Modifier.height(100.dp))
+        LoginButton(YellowFEE500, Black3A1D1D, YellowFEE500, stringResource(R.string.login_kakao), viewModel = viewModel)
+        Spacer(modifier = Modifier.height(200.dp))
     }
-
 }

@@ -17,12 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.yjdev.goforawalk.data.Feed
-import com.yjdev.goforawalk.ui.component.FeedCard
+import com.yjdev.goforawalk.data.FootStep
+import com.yjdev.goforawalk.ui.component.FootStepCard
 import com.yjdev.goforawalk.ui.theme.Goforawalk_AndroidTheme
 
 @Composable
-fun HomeScreen(feedList: List<Feed>) {
+fun HomeScreen(feedList: List<FootStep>) {
     Goforawalk_AndroidTheme {
         Column(
             modifier = Modifier
@@ -56,7 +56,7 @@ fun HomeScreen(feedList: List<Feed>) {
             } else {
                 LazyColumn {
                     items(feedList) { feed ->
-                        FeedCard(feed)
+                        FootStepCard(feed)
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }

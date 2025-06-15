@@ -76,7 +76,7 @@ fun MainScreen(viewModel: MainViewModel) {
         ) { innerPadding ->
             NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
                 composable(Screen.Home.route) { HomeScreen(list) }
-                composable(Screen.Certify.route) { CertifyScreen() }
+                composable(Screen.Certify.route) { CertifyScreen(viewModel, onFinish = { navController.popBackStack() }) }
                 composable(Screen.Profile.route) {
                     ProfileScreen(profile = profile ?: Profile(
                         userId = 0,

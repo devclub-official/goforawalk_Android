@@ -2,6 +2,7 @@ package com.yjdev.goforawalk.ui.screen
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,17 +30,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.yjdev.goforawalk.MainViewModel
+import com.yjdev.goforawalk.data.PostResult
 import com.yjdev.goforawalk.ui.theme.GrayD3D3D3
 import com.yjdev.goforawalk.ui.theme.Green8AA76D
+import java.io.File
 
 @Composable
-fun CertifyScreen() {
+fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var text by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val postResult by viewModel.postResult.collectAsState()
     val maxLength = 50
+
+    LaunchedEffect(postResult) {
+        when (postResult) {
+            is PostResult.Success -> {
+                Toast.makeText(context, "업로드 완료", Toast.LENGTH_SHORT).show()
+                onFinish()
+            }
+
+            is PostResult.Failure -> {
+                val errorMessage = (postResult as PostResult.Failure).errorMsg
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+            }
+
+            null -> {}
+        }
+    }
 
     if (imageUri == null) {
         CameraScreen(
@@ -63,7 +88,8 @@ fun CertifyScreen() {
 
             Image(
                 painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -102,7 +128,14 @@ fun CertifyScreen() {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
-                    onClick = { /* 남기기 */ },
+                    onClick = {
+                        imageUri?.let { uri ->
+                            viewModel.postFootStep(
+                                imageFile = File(uri.path ?: return@let),
+                                contentText = text
+                            )
+                        }
+                    },
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Green8AA76D,
@@ -117,7 +150,7 @@ fun CertifyScreen() {
                 }
 
                 Button(
-                    onClick = { /* 취소 */ },
+                    onClick = { onFinish() },
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = GrayD3D3D3,

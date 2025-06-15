@@ -66,14 +66,11 @@ fun FootStepCard(footStep: FootStep) {
                     modifier = Modifier.matchParentSize()
                 )
 
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(8.dp),
-                ) {
-                    Text("걷는 ${1}일 연속", color = Color.White)
-                    Text(footStep.date, color = Color.White, fontSize = 12.sp)
-                }
+                Text(
+                    footStep.date, modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp), color = Color.White, fontSize = 12.sp
+                )
             }
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -85,7 +82,7 @@ fun FootStepCard(footStep: FootStep) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = footStep.content,
+                    text = footStep.content ?: "",
                     color = Color.Gray,
                     fontSize = 14.sp,
                     maxLines = 2,

@@ -1,6 +1,6 @@
 package com.yjdev.goforawalk.data
 
-data class FootStepResponse(
+data class FootStepsResponse(
     val data: FootStepData
 )
 
@@ -14,6 +14,6 @@ data class FootStep(
     val footStepId: Int,
     val date: String,
     val imageUrl: String,
-    val content: String,
+    val content: String?,
     val createdAt: String
 )

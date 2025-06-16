@@ -116,6 +116,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun resetPostResult() {
+        _postResult.value = null
+    }
+
     private fun createImagePart(file: File): MultipartBody.Part {
         val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData("data", file.name, requestFile)

@@ -65,6 +65,7 @@ fun HomeScreen(viewModel: MainViewModel, feedList: List<Footstep>) {
                                 feed.footstepId,
                                 onSuccess = {
                                     Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
+                                    viewModel.fetchList()
                                 },
                                 onError = {
                                     Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show()

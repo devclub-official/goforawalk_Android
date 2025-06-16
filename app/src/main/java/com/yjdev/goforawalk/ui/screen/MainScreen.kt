@@ -75,7 +75,7 @@ fun MainScreen(viewModel: MainViewModel) {
             }
         ) { innerPadding ->
             NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
-                composable(Screen.Home.route) { HomeScreen(list) }
+                composable(Screen.Home.route) { HomeScreen(viewModel, list) }
                 composable(Screen.Certify.route) { CertifyScreen(viewModel, onFinish = { navController.popBackStack() }) }
                 composable(Screen.Profile.route) {
                     ProfileScreen(profile = profile ?: Profile(
@@ -83,8 +83,8 @@ fun MainScreen(viewModel: MainViewModel) {
                         userNickname = "Unknown",
                         userEmail = null,
                         userProvider = "NONE",
-                        totalFootStepCount = 0,
-                        footStepStreakDays = 0
+                        totalFootstepCount = 0,
+                        footstepStreakDays = 0
                     ), onSettingsClick = { navController.navigate(Screen.Settings.route) })
                 }
                 composable(Screen.Settings.route) { SettingsScreen(onBack = { navController.popBackStack() }) }

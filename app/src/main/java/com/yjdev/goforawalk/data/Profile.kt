@@ -9,6 +9,6 @@ data class Profile(
     val userNickname: String,
     val userEmail: String?,
     val userProvider: String,
-    val totalFootStepCount: Int,
-    val footStepStreakDays: Int
+    val totalFootstepCount: Int,
+    val footstepStreakDays: Int
 )

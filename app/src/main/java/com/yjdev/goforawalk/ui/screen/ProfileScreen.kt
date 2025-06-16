@@ -79,7 +79,7 @@ fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "${profile.totalFootStepCount}",
+                        text = "${profile.totalFootstepCount}",
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium
                     )
@@ -92,7 +92,7 @@ fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "${profile.footStepStreakDays}",
+                        text = "${profile.footstepStreakDays}",
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
                         style = MaterialTheme.typography.titleMedium

@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.yjdev.goforawalk.data.ErrorResponse
-import com.yjdev.goforawalk.data.FootStep
-import com.yjdev.goforawalk.data.FootStepResponse
+import com.yjdev.goforawalk.data.Footstep
+import com.yjdev.goforawalk.data.FootstepResponse
 import com.yjdev.goforawalk.data.IdTokenRequest
 import com.yjdev.goforawalk.data.PostResult
 import com.yjdev.goforawalk.data.Profile
 import com.yjdev.goforawalk.manager.TokenManager
+import com.yjdev.goforawalk.repository.FootstepRepository
 import com.yjdev.goforawalk.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
+    private val footstepRepository: FootstepRepository,
     private val tokenManager: TokenManager,
     private val apiService: ApiService
 ) : ViewModel() {
@@ -37,8 +39,8 @@ class MainViewModel @Inject constructor(
     private val _loginState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val loginState: StateFlow<LoginUiState> = _loginState.asStateFlow()
 
-    private val _itemList = MutableStateFlow<List<FootStep>>(emptyList())
-    val itemList: StateFlow<List<FootStep>> = _itemList
+    private val _itemList = MutableStateFlow<List<Footstep>>(emptyList())
+    val itemList: StateFlow<List<Footstep>> = _itemList
 
     private val _profile = MutableStateFlow<Profile?>(null)
     val profile: StateFlow<Profile?> = _profile
@@ -82,7 +84,25 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun postFootStep(imageFile: File, contentText: String) {
+    fun deleteFootstep(footstepId: Int, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val token = getToken() ?: return@launch
+                val response = footstepRepository.deleteFootstep("Bearer $token",footstepId)
+                if (response.isSuccessful) {
+                    onSuccess()
+                    Log.d("deleteFootStep", "발자취 삭제 성공")
+                } else {
+                    onError("삭제 실패: ${response.code()}")
+                    Log.d("deleteFootStep", "발자취 삭제 실패 ${response.code()} ${response.body()} ${response.message()} ${response}")
+                }
+            } catch (e: Exception) {
+                onError("오류: ${e.message}")
+            }
+        }
+    }
+
+    fun postFootstep(imageFile: File, contentText: String) {
         viewModelScope.launch {
             val token = getToken() ?: return@launch
             val imagePart = createImagePart(imageFile)
@@ -105,7 +125,7 @@ class MainViewModel @Inject constructor(
         return text.toRequestBody("text/plain".toMediaTypeOrNull())
     }
 
-    private suspend fun safeApiCall(call: suspend () -> Response<FootStepResponse>): Response<FootStepResponse>? {
+    private suspend fun safeApiCall(call: suspend () -> Response<FootstepResponse>): Response<FootstepResponse>? {
         return try {
             call()
         } catch (e: Exception) {
@@ -114,7 +134,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun handleResponse(response: Response<FootStepResponse>?) {
+    private fun handleResponse(response: Response<FootstepResponse>?) {
         if (response == null) {
             _postResult.value = PostResult.Failure("네트워크 오류가 발생했습니다.")
             return
@@ -122,12 +142,12 @@ class MainViewModel @Inject constructor(
 
         if (response.isSuccessful) {
             _postResult.value = PostResult.Success(response.body())
-            Log.d("PostFootstep", "성공! ${response.body()}")
+            Log.d("PostFootstep", "발자취 생성 성공! ${response.body()}")
         } else {
             val errorBodyString = response.errorBody()?.string()
             val errorMessage = parseErrorMessage(errorBodyString)
             _postResult.value = PostResult.Failure(errorMessage)
-            Log.e("PostFootstep", "실패: ${response.code()} $errorBodyString")
+            Log.e("PostFootstep", "발자취 생성 실패: ${response.code()} $errorBodyString")
         }
     }
 
@@ -141,7 +161,6 @@ class MainViewModel @Inject constructor(
             "알 수 없는 오류 발생"
         }
     }
-
 
     fun fetchUserProfile() {
         viewModelScope.launch {
@@ -159,7 +178,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val token = tokenManager.getToken() ?: return@launch
-                val response = apiService.getFootStepsWithAuth("Bearer $token")
+                val response = apiService.getFootstepsWithAuth("Bearer $token")
                 _itemList.value = response.data.footsteps
                 Log.d("fetchList", "${response.data}")
             } catch (e: Exception) {

@@ -1,7 +1,7 @@
 package com.yjdev.goforawalk
 
-import com.yjdev.goforawalk.data.FootStepResponse
-import com.yjdev.goforawalk.data.FootStepsResponse
+import com.yjdev.goforawalk.data.FootstepResponse
+import com.yjdev.goforawalk.data.FootstepsResponse
 import com.yjdev.goforawalk.data.IdTokenRequest
 import com.yjdev.goforawalk.data.LoginResponse
 import com.yjdev.goforawalk.data.ProfileResponse
@@ -9,6 +9,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -29,15 +30,21 @@ interface ApiService {
         @Header("Authorization") auth: String,
         @Part image: MultipartBody.Part,
         @Part("content") content: RequestBody
-    ): Response<FootStepResponse>
+    ): Response<FootstepResponse>
 
     @GET("/api/v1/footsteps")
-    suspend fun getFootStepsWithAuth(
+    suspend fun getFootstepsWithAuth(
         @Header("Authorization") auth: String
-    ): FootStepsResponse
+    ): FootstepsResponse
 
     @GET("/api/v1/profile")
     suspend fun getProfileWithAuth(
         @Header("Authorization") auth: String
     ): ProfileResponse
+
+    @DELETE("/api/v1/footsteps/{footstepId}")
+    suspend fun deleteFootstep(
+        @Header("Authorization") auth: String,
+        @Path("footstepId") id: Int
+    ): Response<Unit>
 }

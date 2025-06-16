@@ -1,5 +1,6 @@
 package com.yjdev.goforawalk.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,14 +16,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.yjdev.goforawalk.data.FootStep
-import com.yjdev.goforawalk.ui.component.FootStepCard
+import com.yjdev.goforawalk.MainViewModel
+import com.yjdev.goforawalk.data.Footstep
+import com.yjdev.goforawalk.ui.component.FootstepCard
 import com.yjdev.goforawalk.ui.theme.Goforawalk_AndroidTheme
 
 @Composable
-fun HomeScreen(feedList: List<FootStep>) {
+fun HomeScreen(viewModel: MainViewModel, feedList: List<Footstep>) {
+    val context = LocalContext.current
     Goforawalk_AndroidTheme {
         Column(
             modifier = Modifier
@@ -56,7 +60,18 @@ fun HomeScreen(feedList: List<FootStep>) {
             } else {
                 LazyColumn {
                     items(feedList) { feed ->
-                        FootStepCard(feed)
+                        FootstepCard(footstep = feed, onDelete = {
+                            viewModel.deleteFootstep(
+                                feed.footstepId,
+                                onSuccess = {
+                                    Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
+                                },
+                                onError = {
+                                    Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        }
+                        )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }

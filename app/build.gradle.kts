@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extensions)
     implementation(libs.google.accompanist)
+    implementation(libs.okhttp3)
+    implementation(libs.okhttp3.interceptor)
     ksp(libs.dagger.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -73,7 +75,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
 }

@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.yjdev.goforawalk.ui.component.AppNavigation
-import com.yjdev.goforawalk.ui.screen.RequestCameraPermission
+import com.yjdev.goforawalk.presentation.ui.component.AppNavigation
+import com.yjdev.goforawalk.presentation.ui.screen.RequestCameraPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -130,7 +130,7 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
                 Button(
                     onClick = {
                         imageUri?.let { uri ->
-                            viewModel.postFootStep(
+                            viewModel.postFootstep(
                                 imageFile = File(uri.path ?: return@let),
                                 contentText = text
                             )

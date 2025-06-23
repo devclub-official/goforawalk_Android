@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">goforawalk</string>
+    <string name="app_name">걷는</string>
     <string name="login_sub_title">\'가장 쉬운 걷기의 시작\'</string>
     <string name="login_kakao">카카오톡 로그인</string>
     <string name="login_google">구글 로그인</string>

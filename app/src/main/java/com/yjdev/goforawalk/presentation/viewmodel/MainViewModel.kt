@@ -2,6 +2,8 @@ package com.yjdev.goforawalk.presentation.viewmodel
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yjdev.goforawalk.presentation.state.LoginUiState
@@ -12,6 +14,7 @@ import com.yjdev.goforawalk.data.repository.FootstepRepository
 import com.yjdev.goforawalk.data.repository.LoginRepository
 import com.yjdev.goforawalk.data.repository.LoginResult
 import com.yjdev.goforawalk.data.local.TokenManager
+import com.yjdev.goforawalk.presentation.state.FootstepUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +42,9 @@ class MainViewModel @Inject constructor(
     private val _postResult = MutableStateFlow<PostResult?>(null)
     val postResult = _postResult.asStateFlow()
 
+    private val _uiState = mutableStateOf(FootstepUiState())
+    val uiState: State<FootstepUiState> = _uiState
+
     fun getToken(): String? = tokenManager.getToken()
 
     fun kakaoLogin(context: Context) {
@@ -61,9 +67,18 @@ class MainViewModel @Inject constructor(
 
     fun fetchList() {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
             val result = footstepRepository.fetchFootsteps()
-            result.onSuccess { _itemList.value = it }
-                .onFailure { Log.e("ViewModel", "목록 조회 실패: ${it.message}") }
+            result.onSuccess {
+                _uiState.value = FootstepUiState(
+                    isLoading = false,
+                    feedList = it
+                )
+            }.onFailure {
+                Log.e("ViewModel", "목록 조회 실패: ${it.message}")
+                _uiState.value = FootstepUiState(isLoading = false)
+            }
         }
     }
 

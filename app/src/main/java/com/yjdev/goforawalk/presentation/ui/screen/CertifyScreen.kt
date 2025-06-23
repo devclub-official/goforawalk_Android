@@ -4,7 +4,10 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,10 +36,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.yjdev.goforawalk.presentation.viewmodel.MainViewModel
 import com.yjdev.goforawalk.domain.model.PostResult
 import com.yjdev.goforawalk.presentation.ui.theme.GrayD3D3D3
+import com.yjdev.goforawalk.presentation.ui.theme.GrayE0E0E0
+import com.yjdev.goforawalk.presentation.ui.theme.GrayF5F5F5
 import com.yjdev.goforawalk.presentation.ui.theme.Green8AA76D
 import java.io.File
 
@@ -78,24 +84,27 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.height(15.dp))
 
             Text(
                 text = "발자취",
-                style = MaterialTheme.typography.titleMedium,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 20.dp)
+                modifier = Modifier.padding(start = 15.dp)
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            Image(
-                painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Box(modifier = Modifier
+                .background(GrayF5F5F5)
+                .border(1.dp, GrayE0E0E0)) {
+                Image(
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             OutlinedTextField(
                 value = text,
@@ -122,7 +131,7 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
                 )
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Row(
                 modifier = Modifier

@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.yjdev.goforawalk.data.model.Profile
 import com.yjdev.goforawalk.presentation.ui.theme.Goforawalk_AndroidTheme
 
@@ -42,14 +43,14 @@ fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
             ) {
                 Text(
                     text = "프로필",
-                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "설정",
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(22.dp)
                         .clickable { onSettingsClick() }
                 )
             }
@@ -61,7 +62,7 @@ fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
             ) {
                 Text(
                     text = profile.userNickname,
-                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Medium
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -81,11 +82,12 @@ fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
                     Text(
                         text = "${profile.totalFootstepCount}",
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleMedium
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 22.sp
                     )
                     Text(
                         text = "발자취 개수",
-                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 12.sp,
                         color = Color.Gray
                     )
                 }
@@ -95,11 +97,11 @@ fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
                         text = "${profile.footstepStreakDays}",
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
-                        style = MaterialTheme.typography.titleMedium
+                        fontSize = 22.sp
                     )
                     Text(
                         text = "연속 발자취",
-                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 12.sp,
                         color = Color.Gray
                     )
                 }

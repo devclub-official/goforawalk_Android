@@ -66,6 +66,7 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
             is PostResult.Failure -> {
                 val errorMessage = (postResult as PostResult.Failure).errorMsg
                 Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                viewModel.resetPostResult()
                 viewModel.fetchList()
             }
 

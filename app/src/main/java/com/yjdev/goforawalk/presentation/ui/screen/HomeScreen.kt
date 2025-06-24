@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yjdev.goforawalk.presentation.state.FootstepUiState
 import com.yjdev.goforawalk.presentation.ui.component.FootstepCard
 import com.yjdev.goforawalk.presentation.ui.theme.Goforawalk_AndroidTheme
 import com.yjdev.goforawalk.presentation.viewmodel.MainViewModel
@@ -41,42 +42,44 @@ fun HomeScreen(viewModel: MainViewModel) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            when {
-                uiState.isLoading -> {
-                }
+            when (val state = uiState) {
+                is FootstepUiState.Loading -> {}
 
-                uiState.feedList.isEmpty() -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(text = "아직 발자취가 없어요", fontSize = 16.sp, fontWeight = FontWeight.Medium)
-                        Text(text = "첫 발자취를 남겨볼까요?", fontSize = 16.sp, fontWeight = FontWeight.Medium)
-                    }
-                }
-
-                else -> {
-                    LazyColumn {
-                        items(uiState.feedList) { feed ->
-                            FootstepCard(footstep = feed, onDelete = {
-                                viewModel.deleteFootstep(
-                                    feed.footstepId,
-                                    onSuccess = {
-                                        Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
-                                        viewModel.fetchList()
-                                    },
-                                    onError = {
-                                        Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show()
-                                    }
-                                )
-                            })
-                            Spacer(modifier = Modifier.height(12.dp))
+                is FootstepUiState.Success -> {
+                    if (state.feedList.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(text = "아직 발자취가 없어요", fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                            Text(text = "첫 발자취를 남겨볼까요?", fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                        }
+                    } else {
+                        LazyColumn {
+                            items(state.feedList) { feed ->
+                                FootstepCard(footstep = feed, onDelete = {
+                                    viewModel.deleteFootstep(
+                                        feed.footstepId,
+                                        onSuccess = {
+                                            Toast.makeText(context, "삭제 성공", Toast.LENGTH_SHORT).show()
+                                            viewModel.fetchList()
+                                        },
+                                        onError = {
+                                            Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show()
+                                        }
+                                    )
+                                })
+                                Spacer(modifier = Modifier.height(12.dp))
+                            }
                         }
                     }
                 }
+
+                is FootstepUiState.Failure -> {}
             }
+
         }
     }
 }

@@ -1,6 +1,10 @@
 package com.yjdev.goforawalk.presentation.ui.screen
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import android.view.Surface
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -27,6 +31,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun CameraScreen(
@@ -100,3 +105,35 @@ fun CameraScreen(
         )
     }
 }
+
+fun compressAndResizeImage(context: Context, uri: Uri): File {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    val originalBitmap = BitmapFactory.decodeStream(inputStream)
+        ?: throw IllegalStateException("이미지를 불러올 수 없습니다.")
+
+    val resized = resizeBitmap(originalBitmap, maxWidth = 640, maxHeight = 640)
+
+    val compressedFile = File(context.cacheDir, "compressed_image.jpg")
+    val outputStream = FileOutputStream(compressedFile)
+    val success = resized.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
+
+    outputStream.flush()
+    outputStream.close()
+
+    if (!success) {
+        throw IllegalStateException("이미지 압축 실패")
+    }
+
+    Log.d("CompressImage", "Compressed resized file size: ${compressedFile.length()} bytes")
+    return compressedFile
+}
+
+fun resizeBitmap(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
+    val width = bitmap.width
+    val height = bitmap.height
+
+    val scale = minOf(maxWidth.toFloat() / width, maxHeight.toFloat() / height, 1.0f) // 원본보다 작게만
+    return Bitmap.createScaledBitmap(bitmap, (width * scale).toInt(), (height * scale).toInt(), true)
+}
+
+

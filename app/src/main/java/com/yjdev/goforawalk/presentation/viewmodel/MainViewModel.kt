@@ -6,15 +6,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yjdev.goforawalk.presentation.state.LoginUiState
-import com.yjdev.goforawalk.domain.model.PostResult
+import com.yjdev.goforawalk.data.local.TokenManager
 import com.yjdev.goforawalk.data.model.Footstep
 import com.yjdev.goforawalk.data.model.Profile
 import com.yjdev.goforawalk.data.repository.FootstepRepository
 import com.yjdev.goforawalk.data.repository.LoginRepository
 import com.yjdev.goforawalk.data.repository.LoginResult
-import com.yjdev.goforawalk.data.local.TokenManager
+import com.yjdev.goforawalk.domain.model.PostResult
 import com.yjdev.goforawalk.presentation.state.FootstepUiState
+import com.yjdev.goforawalk.presentation.state.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,7 +42,7 @@ class MainViewModel @Inject constructor(
     private val _postResult = MutableStateFlow<PostResult?>(null)
     val postResult = _postResult.asStateFlow()
 
-    private val _uiState = mutableStateOf(FootstepUiState())
+    private val _uiState = mutableStateOf<FootstepUiState>(FootstepUiState.Loading)
     val uiState: State<FootstepUiState> = _uiState
 
     fun getToken(): String? = tokenManager.getToken()
@@ -67,20 +67,17 @@ class MainViewModel @Inject constructor(
 
     fun fetchList() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = FootstepUiState.Loading
 
             val result = footstepRepository.fetchFootsteps()
             result.onSuccess {
-                _uiState.value = FootstepUiState(
-                    isLoading = false,
-                    feedList = it
-                )
+                _uiState.value = FootstepUiState.Success(it)
             }.onFailure {
-                Log.e("ViewModel", "목록 조회 실패: ${it.message}")
-                _uiState.value = FootstepUiState(isLoading = false)
+                _uiState.value = FootstepUiState.Failure(it.message ?: "알 수 없는 오류")
             }
         }
     }
+
 
     fun postFootstep(imageFile: File, contentText: String) {
         viewModelScope.launch {

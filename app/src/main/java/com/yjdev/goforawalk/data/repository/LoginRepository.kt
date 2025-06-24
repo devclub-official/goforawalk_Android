@@ -3,9 +3,9 @@ package com.yjdev.goforawalk.data.repository
 import android.content.Context
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
-import com.yjdev.goforawalk.data.remote.ApiService
-import com.yjdev.goforawalk.data.model.IdTokenRequest
 import com.yjdev.goforawalk.data.local.TokenManager
+import com.yjdev.goforawalk.data.model.IdTokenRequest
+import com.yjdev.goforawalk.data.remote.ApiService
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -39,7 +39,14 @@ class LoginRepository @Inject constructor(
             }
 
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                UserApiClient.instance.loginWithKakaoTalk(context, callback = callback)
+                UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+                    if (error != null) {
+                        // 카카오톡 로그인 실패했을 때 카카오계정으로 재시도
+                        UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+                    } else if (token != null) {
+                        callback(token, null)
+                    }
+                }
             } else {
                 UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
             }

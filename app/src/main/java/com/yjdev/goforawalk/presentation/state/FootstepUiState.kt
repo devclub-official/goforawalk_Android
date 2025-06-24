@@ -2,7 +2,8 @@ package com.yjdev.goforawalk.presentation.state
 
 import com.yjdev.goforawalk.data.model.Footstep
 
-data class FootstepUiState(
-    val isLoading: Boolean = false,
-    val feedList: List<Footstep> = emptyList()
-)
+sealed class FootstepUiState {
+    object Loading : FootstepUiState()
+    data class Success(val feedList: List<Footstep>) : FootstepUiState()
+    data class Failure(val errorMessage: String) : FootstepUiState()
+}

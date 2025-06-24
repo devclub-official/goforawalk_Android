@@ -38,13 +38,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.yjdev.goforawalk.presentation.viewmodel.MainViewModel
 import com.yjdev.goforawalk.domain.model.PostResult
 import com.yjdev.goforawalk.presentation.ui.theme.GrayD3D3D3
 import com.yjdev.goforawalk.presentation.ui.theme.GrayE0E0E0
 import com.yjdev.goforawalk.presentation.ui.theme.GrayF5F5F5
 import com.yjdev.goforawalk.presentation.ui.theme.Green8AA76D
-import java.io.File
+import com.yjdev.goforawalk.presentation.viewmodel.MainViewModel
 
 @Composable
 fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
@@ -95,13 +94,18 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            Box(modifier = Modifier
-                .background(GrayF5F5F5)
-                .border(1.dp, GrayE0E0E0)) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .background(GrayF5F5F5)
+                    .border(1.dp, GrayE0E0E0)
+            ) {
                 Image(
                     painter = rememberAsyncImagePainter(imageUri),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(500.dp)
                 )
             }
 
@@ -143,8 +147,9 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
                 Button(
                     onClick = {
                         imageUri?.let { uri ->
+                            val compressedFile = compressAndResizeImage(context, uri)
                             viewModel.postFootstep(
-                                imageFile = File(uri.path ?: return@let),
+                                imageFile = compressedFile,
                                 contentText = text
                             )
                         }

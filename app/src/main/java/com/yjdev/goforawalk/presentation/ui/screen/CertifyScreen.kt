@@ -50,14 +50,14 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var text by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val postResult by viewModel.postResult.collectAsState()
+    val postResult by viewModel.postFootstepResult.collectAsState()
     val maxLength = 50
 
     LaunchedEffect(postResult) {
         when (postResult) {
             is PostResult.Success -> {
                 Toast.makeText(context, "업로드 완료", Toast.LENGTH_SHORT).show()
-                viewModel.resetPostResult()
+                viewModel.resetPostFootstepResult()
                 viewModel.fetchList()
                 onFinish()
             }
@@ -65,7 +65,7 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
             is PostResult.Failure -> {
                 val errorMessage = (postResult as PostResult.Failure).errorMsg
                 Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                viewModel.resetPostResult()
+                viewModel.resetPostFootstepResult()
                 viewModel.fetchList()
             }
 

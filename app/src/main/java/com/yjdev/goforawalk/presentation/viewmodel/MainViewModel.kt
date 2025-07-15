@@ -12,6 +12,7 @@ import com.yjdev.goforawalk.data.model.Profile
 import com.yjdev.goforawalk.data.repository.FootstepRepository
 import com.yjdev.goforawalk.data.repository.LoginRepository
 import com.yjdev.goforawalk.data.repository.LoginResult
+import com.yjdev.goforawalk.data.repository.UserRepository
 import com.yjdev.goforawalk.domain.model.PostResult
 import com.yjdev.goforawalk.presentation.state.FootstepUiState
 import com.yjdev.goforawalk.presentation.state.LoginUiState
@@ -27,11 +28,15 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     private val footstepRepository: FootstepRepository,
+    private val userRepository: UserRepository,
     private val tokenManager: TokenManager
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val loginState: StateFlow<LoginUiState> = _loginState.asStateFlow()
+
+    private val _deleteAccountResult = MutableStateFlow<Result<Unit>?>(null)
+    val deleteAccountResult: StateFlow<Result<Unit>?> = _deleteAccountResult
 
     private val _itemList = MutableStateFlow<List<Footstep>>(emptyList())
     val itemList: StateFlow<List<Footstep>> = _itemList
@@ -39,8 +44,8 @@ class MainViewModel @Inject constructor(
     private val _profile = MutableStateFlow<Profile?>(null)
     val profile: StateFlow<Profile?> = _profile
 
-    private val _postResult = MutableStateFlow<PostResult?>(null)
-    val postResult = _postResult.asStateFlow()
+    private val _postFootstepResult = MutableStateFlow<PostResult?>(null)
+    val postFootstepResult = _postFootstepResult.asStateFlow()
 
     private val _uiState = mutableStateOf<FootstepUiState>(FootstepUiState.Loading)
     val uiState: State<FootstepUiState> = _uiState
@@ -55,6 +60,20 @@ class MainViewModel @Inject constructor(
                 is LoginResult.Failure -> LoginUiState.Failure(result.message)
             }
         }
+    }
+
+    fun deleteAccount() {
+        viewModelScope.launch {
+            val result = userRepository.deleteAccount()
+            _deleteAccountResult.value = result
+            result.onSuccess {
+                tokenManager.clearToken()
+            }
+        }
+    }
+
+    fun resetAccountResult() {
+        _deleteAccountResult.value = null
     }
 
     fun fetchUserProfile() {
@@ -82,7 +101,7 @@ class MainViewModel @Inject constructor(
     fun postFootstep(imageFile: File, contentText: String) {
         viewModelScope.launch {
             val result = footstepRepository.postFootstep(imageFile, contentText)
-            _postResult.value = result
+            _postFootstepResult.value = result
         }
     }
 
@@ -96,7 +115,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun resetPostResult() {
-        _postResult.value = null
+    fun resetPostFootstepResult() {
+        _postFootstepResult.value = null
     }
 }

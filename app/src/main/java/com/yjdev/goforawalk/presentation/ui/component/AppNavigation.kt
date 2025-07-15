@@ -1,10 +1,12 @@
 package com.yjdev.goforawalk.presentation.ui.component
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,12 +30,15 @@ fun AppNavigation() {
         }
     }
 
-    LaunchedEffect(loginState) {
-        if (loginState is LoginUiState.Success) {
-            navController.navigate("main") {
-                popUpTo("login") { inclusive = true } // 로그인 화면을 백스택에서 제거
+    LaunchedEffect(Unit) {
+        snapshotFlow { loginState }
+            .collect { state ->
+                if (state is LoginUiState.Success) {
+                    navController.navigate("main") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
             }
-        }
     }
 
     NavHost(navController = navController, startDestination = startDestination) {
@@ -41,7 +46,7 @@ fun AppNavigation() {
             LoginScreen(viewModel = viewModel)
         }
         composable("main") {
-            MainScreen(viewModel = viewModel)
+            MainScreen(viewModel = viewModel, rootNavHostController = navController)
         }
     }
 }

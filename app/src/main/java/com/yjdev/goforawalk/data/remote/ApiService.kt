@@ -24,6 +24,11 @@ interface ApiService {
         @Body request: IdTokenRequest
     ): Response<LoginResponse>
 
+    @DELETE("/api/v1/users/me")
+    suspend fun deleteAccount(
+        @Header("Authorization") auth: String
+    ): Response<Unit>
+
     @Multipart
     @POST("/api/v1/footsteps")
     suspend fun postFootstep(

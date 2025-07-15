@@ -28,7 +28,7 @@ import com.yjdev.goforawalk.presentation.state.Screen
 import com.yjdev.goforawalk.presentation.ui.theme.Goforawalk_AndroidTheme
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostController) {
     val navController = rememberNavController()
     val items = listOf(Screen.Home, Screen.Certify, Screen.Profile)
     val profile by viewModel.profile.collectAsState()
@@ -87,7 +87,14 @@ fun MainScreen(viewModel: MainViewModel) {
                         footstepStreakDays = 0
                     ), onSettingsClick = { navController.navigate(Screen.Settings.route) })
                 }
-                composable(Screen.Settings.route) { SettingsScreen(onBack = { navController.popBackStack() }) }
+                composable(Screen.Settings.route) {
+                    SettingsScreen(
+                        viewModel = viewModel,
+                        onBack = { navController.popBackStack() },
+                        navController = navController,
+                        rootNavController = rootNavHostController
+                    )
+                }
             }
         }
     }

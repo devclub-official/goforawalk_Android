@@ -38,7 +38,7 @@ fun SettingsScreen(viewModel: MainViewModel, onBack: () -> Unit, navController: 
     LaunchedEffect(deleteAccountResult) {
         deleteAccountResult?.let {
             if (it.isSuccess) {
-                Log.d("SettingsScreen jyj ", "탈퇴 성공 - 로그인 화면으로 이동")
+                Log.d("SettingsScreen", "탈퇴 성공 - 로그인 화면으로 이동")
                 rootNavController.navigate("login") {
                     popUpTo("main") { inclusive = true }
                 }

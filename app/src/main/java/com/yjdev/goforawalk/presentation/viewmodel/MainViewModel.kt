@@ -54,6 +54,7 @@ class MainViewModel @Inject constructor(
 
     fun kakaoLogin(context: Context) {
         viewModelScope.launch {
+            _loginState.value = LoginUiState.Idle
             val result = loginRepository.loginWithKakao(context)
             _loginState.value = when (result) {
                 is LoginResult.Success -> LoginUiState.Success

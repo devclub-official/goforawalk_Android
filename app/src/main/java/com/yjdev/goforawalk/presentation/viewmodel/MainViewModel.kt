@@ -102,6 +102,9 @@ class MainViewModel @Inject constructor(
     fun postFootstep(imageFile: File, contentText: String) {
         viewModelScope.launch {
             val result = footstepRepository.postFootstep(imageFile, contentText)
+            if (result is PostResult.Success) {
+                fetchUserProfile()
+            }
             _postFootstepResult.value = result
         }
     }
@@ -110,7 +113,10 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val result = footstepRepository.deleteFootstep(id)
             result.fold(
-                onSuccess = { onSuccess() },
+                onSuccess = {
+                    fetchUserProfile()
+                    onSuccess()
+                },
                 onFailure = { onError(it.message ?: "삭제 실패") }
             )
         }

@@ -3,6 +3,8 @@ package com.yjdev.goforawalk.presentation.ui.screen
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.util.Log
 import android.view.Surface
@@ -107,9 +109,8 @@ fun CameraScreen(
 }
 
 fun compressAndResizeImage(context: Context, uri: Uri): File {
-    val inputStream = context.contentResolver.openInputStream(uri)
-    val originalBitmap = BitmapFactory.decodeStream(inputStream)
-        ?: throw IllegalStateException("이미지를 불러올 수 없습니다.")
+    // EXIF 정보 반영해서 올바른 방향의 비트맵 가져오기
+    val originalBitmap = getCorrectlyOrientedBitmap(context, uri)
 
     val resized = resizeBitmap(originalBitmap, maxWidth = 640, maxHeight = 640)
 
@@ -136,4 +137,24 @@ fun resizeBitmap(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
     return Bitmap.createScaledBitmap(bitmap, (width * scale).toInt(), (height * scale).toInt(), true)
 }
 
+fun getCorrectlyOrientedBitmap(context: Context, uri: Uri): Bitmap {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    val exif = ExifInterface(inputStream!!)
+    val orientation = exif.getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_NORMAL
+    )
+    inputStream.close()
 
+    val bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
+        ?: throw IllegalStateException("이미지를 불러올 수 없습니다.")
+
+    val matrix = Matrix()
+    when (orientation) {
+        ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+        ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+        ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+    }
+
+    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+}

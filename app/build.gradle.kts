@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.google.accompanist)
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.interceptor)
+    implementation(libs.androidx.exifinterface)
     ksp(libs.dagger.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -42,7 +42,7 @@ import com.yjdev.goforawalk.domain.model.PostResult
 import com.yjdev.goforawalk.presentation.ui.theme.GrayD3D3D3
 import com.yjdev.goforawalk.presentation.ui.theme.GrayE0E0E0
 import com.yjdev.goforawalk.presentation.ui.theme.GrayF5F5F5
-import com.yjdev.goforawalk.presentation.ui.theme.Green8AA76D
+import com.yjdev.goforawalk.presentation.ui.theme.MainColor
 import com.yjdev.goforawalk.presentation.viewmodel.MainViewModel
 
 @Composable
@@ -156,7 +156,7 @@ fun CertifyScreen(viewModel: MainViewModel, onFinish: () -> Unit) {
                     },
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Green8AA76D,
+                        containerColor = MainColor,
                         contentColor = Color.White
                     ),
                     modifier = Modifier

@@ -22,10 +22,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import com.yjdev.goforawalk.presentation.viewmodel.MainViewModel
 import com.yjdev.goforawalk.data.model.Profile
 import com.yjdev.goforawalk.presentation.state.Screen
 import com.yjdev.goforawalk.presentation.ui.theme.Goforawalk_AndroidTheme
+import com.yjdev.goforawalk.presentation.ui.theme.MainColor
+import com.yjdev.goforawalk.presentation.viewmodel.MainViewModel
 
 @Composable
 fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostController) {
@@ -60,8 +61,8 @@ fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostControlle
                                 icon = { Icon(painterResource(id = screen.icon), contentDescription = screen.label) },
                                 label = { Text(screen.label) },
                                 colors = NavigationBarItemColors(
-                                    selectedIconColor = Color(0xFF109624),
-                                    selectedTextColor = Color(0xFF109624),
+                                    selectedIconColor = MainColor,
+                                    selectedTextColor = MainColor,
                                     selectedIndicatorColor = Color.Transparent,
                                     unselectedIconColor = Color.Gray,
                                     unselectedTextColor = Color.Gray,
@@ -75,7 +76,12 @@ fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostControlle
             }
         ) { innerPadding ->
             NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
-                composable(Screen.Home.route) { HomeScreen(viewModel) }
+                composable(Screen.Home.route) {
+                    HomeScreen(
+                        viewModel,
+                        onNavigateToCertify = { navController.navigate(Screen.Certify.route) }
+                    )
+                }
                 composable(Screen.Certify.route) { CertifyScreen(viewModel, onFinish = { navController.popBackStack() }) }
                 composable(Screen.Profile.route) {
                     ProfileScreen(profile = profile ?: Profile(

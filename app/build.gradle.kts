@@ -14,8 +14,8 @@ android {
         applicationId = "com.yjdev.goforawalk"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "KAKAO_NATIVE_APP_KEY", project.properties["KAKAO_NATIVE_APP_KEY"].toString())

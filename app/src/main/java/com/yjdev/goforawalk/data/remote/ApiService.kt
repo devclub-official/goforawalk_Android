@@ -4,6 +4,7 @@ import com.yjdev.goforawalk.data.model.FootstepResponse
 import com.yjdev.goforawalk.data.model.FootstepsResponse
 import com.yjdev.goforawalk.data.model.IdTokenRequest
 import com.yjdev.goforawalk.data.model.LoginResponse
+import com.yjdev.goforawalk.data.model.NicknameRequest
 import com.yjdev.goforawalk.data.model.ProfileResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -13,6 +14,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
@@ -51,5 +53,11 @@ interface ApiService {
     suspend fun deleteFootstep(
         @Header("Authorization") auth: String,
         @Path("footstepId") id: Int
+    ): Response<Unit>
+
+    @PATCH("/api/v1/users/me/nickname")
+    suspend fun updateNickname(
+        @Header("Authorization") auth: String,
+        @Body request: NicknameRequest
     ): Response<Unit>
 }

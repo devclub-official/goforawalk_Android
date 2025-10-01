@@ -50,6 +50,9 @@ class MainViewModel @Inject constructor(
     private val _uiState = mutableStateOf<FootstepUiState>(FootstepUiState.Loading)
     val uiState: State<FootstepUiState> = _uiState
 
+    private val _nicknameUpdateResult = MutableStateFlow<Result<Unit>?>(null)
+    val nicknameUpdateResult: StateFlow<Result<Unit>?> = _nicknameUpdateResult
+
     fun getToken(): String? = tokenManager.getToken()
 
     fun kakaoLogin(context: Context) {
@@ -124,5 +127,19 @@ class MainViewModel @Inject constructor(
 
     fun resetPostFootstepResult() {
         _postFootstepResult.value = null
+    }
+
+    fun updateNickname(newNickname: String) {
+        viewModelScope.launch {
+            val result = userRepository.updateNickname(newNickname)
+            _nicknameUpdateResult.value = result
+            result.onSuccess {
+                fetchUserProfile()
+            }
+        }
+    }
+
+    fun resetNicknameResult() {
+        _nicknameUpdateResult.value = null
     }
 }

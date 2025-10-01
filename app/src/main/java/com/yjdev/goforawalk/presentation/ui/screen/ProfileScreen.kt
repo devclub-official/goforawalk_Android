@@ -14,10 +14,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +36,10 @@ import com.yjdev.goforawalk.data.model.Profile
 import com.yjdev.goforawalk.presentation.ui.theme.Goforawalk_AndroidTheme
 
 @Composable
-fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
+fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit, onNicknameEdit: (String) -> Unit) {
+    var showDialog by remember { mutableStateOf(false) }
+    var newNickname by remember { mutableStateOf(profile.userNickname) }
+
     Goforawalk_AndroidTheme {
         Column(
             modifier = Modifier
@@ -69,10 +79,39 @@ fun ProfileScreen(profile: Profile, onSettingsClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = "닉네임 수정",
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier
+                        .size(16.dp)
+                        .clickable { showDialog = true }
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
+
+            if (showDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDialog = false },
+                    title = { Text("닉네임 변경") },
+                    text = {
+                        TextField(
+                            value = newNickname,
+                            onValueChange = { if (it.length <= 8) newNickname = it },
+                            label = { Text("새 닉네임 (최대 8자)") }
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            onNicknameEdit(newNickname)
+                            showDialog = false
+                        }) {
+                            Text("확인")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDialog = false }) {
+                            Text("취소")
+                        }
+                    }
+                )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

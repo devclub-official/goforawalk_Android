@@ -44,7 +44,11 @@ class FootstepRepository @Inject constructor(
 
     suspend fun postFootstep(imageFile: File, content: String): PostResult {
         return try {
-            val token = getAuthToken() ?: return PostResult.Failure("토큰 없음")
+            val token = getAuthToken() ?: return PostResult.Failure(
+                errorCode = null,
+                errorMsg = "토큰 없음"
+            )
+
             val imagePart = createImagePart(imageFile)
             val contentPart = content.toRequestBody("text/plain".toMediaTypeOrNull())
 
@@ -54,11 +58,18 @@ class FootstepRepository @Inject constructor(
                 PostResult.Success(response.body())
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorMessage = Gson().fromJson(errorBody, ErrorResponse::class.java)?.message
-                PostResult.Failure(errorMessage ?: "서버 오류")
+                val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+
+                PostResult.Failure(
+                    errorCode = errorResponse?.code,
+                    errorMsg = errorResponse?.message ?: "서버 오류"
+                )
             }
         } catch (e: Exception) {
-            PostResult.Failure(e.message ?: "네트워크 오류")
+            PostResult.Failure(
+                errorCode = null,
+                errorMsg = e.message ?: "네트워크 오류"
+            )
         }
     }
 

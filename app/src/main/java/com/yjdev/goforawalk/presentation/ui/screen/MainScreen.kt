@@ -84,14 +84,17 @@ fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostControlle
                 }
                 composable(Screen.Certify.route) { CertifyScreen(viewModel, onFinish = { navController.popBackStack() }) }
                 composable(Screen.Profile.route) {
-                    ProfileScreen(profile = profile ?: Profile(
-                        userId = 0,
-                        userNickname = "Unknown",
-                        userEmail = null,
-                        userProvider = "NONE",
-                        totalFootstepCount = 0,
-                        footstepStreakDays = 0
-                    ), onSettingsClick = { navController.navigate(Screen.Settings.route) })
+                    ProfileScreen(
+                        profile = profile ?: Profile(
+                            userId = 0,
+                            userNickname = "Unknown",
+                            userEmail = null,
+                            userProvider = "NONE",
+                            totalFootstepCount = 0,
+                            footstepStreakDays = 0
+                        ), onSettingsClick = { navController.navigate(Screen.Settings.route) },
+                        onNicknameEdit = { newNickname -> viewModel.updateNickname(newNickname) }
+                    )
                 }
                 composable(Screen.Settings.route) {
                     SettingsScreen(

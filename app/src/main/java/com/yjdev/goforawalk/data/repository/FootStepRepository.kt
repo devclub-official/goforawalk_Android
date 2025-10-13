@@ -77,4 +77,30 @@ class FootstepRepository @Inject constructor(
         val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData("data", file.name, requestFile)
     }
+
+    suspend fun checkFootstepAvailability(): PostResult {
+        return try {
+            val token = getAuthToken() ?: return PostResult.Failure(
+                errorCode = null,
+                errorMsg = "토큰 없음"
+            )
+
+            val response = apiService.getFootstepAvailability(token)
+
+            if (response.isSuccessful) {
+                PostResult.Success(response.body())
+            } else {
+                PostResult.Failure(
+                    errorCode = response.code().toString(),
+                    errorMsg = "서버 오류: ${response.code()}"
+                )
+            }
+        } catch (e: Exception) {
+            PostResult.Failure(
+                errorCode = null,
+                errorMsg = e.message ?: "네트워크 오류"
+            )
+        }
+    }
+
 }

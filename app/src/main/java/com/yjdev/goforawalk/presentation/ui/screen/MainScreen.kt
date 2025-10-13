@@ -1,6 +1,7 @@
 package com.yjdev.goforawalk.presentation.ui.screen
 
 import android.Manifest
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -12,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,6 +30,7 @@ import com.yjdev.goforawalk.presentation.state.Screen
 import com.yjdev.goforawalk.presentation.ui.theme.Goforawalk_AndroidTheme
 import com.yjdev.goforawalk.presentation.ui.theme.MainColor
 import com.yjdev.goforawalk.presentation.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostController) {
@@ -34,6 +38,8 @@ fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostControlle
     val items = listOf(Screen.Home, Screen.Certify, Screen.Profile)
     val profile by viewModel.profile.collectAsState()
     val list by viewModel.itemList.collectAsState()
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.fetchUserProfile()
@@ -52,9 +58,28 @@ fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostControlle
                                 selected = currentRoute == screen.route,
                                 onClick = {
                                     if (currentRoute != screen.route) {
-                                        navController.navigate(screen.route) {
-                                            popUpTo(Screen.Home.route) { inclusive = false }
-                                            launchSingleTop = true
+                                        if (screen == Screen.Certify) {
+                                            coroutineScope.launch {
+                                                viewModel.checkTodayAvailability { canCreate ->
+                                                    if (canCreate) {
+                                                        navController.navigate(Screen.Certify.route) {
+                                                            popUpTo(Screen.Home.route) { inclusive = false }
+                                                            launchSingleTop = true
+                                                        }
+                                                    } else {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "오늘은 이미 발자취를 남겼어요. 내일도 남겨볼까요?",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            navController.navigate(screen.route) {
+                                                popUpTo(Screen.Home.route) { inclusive = false }
+                                                launchSingleTop = true
+                                            }
                                         }
                                     }
                                 },

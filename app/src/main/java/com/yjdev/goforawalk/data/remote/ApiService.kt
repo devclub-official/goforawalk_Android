@@ -1,5 +1,6 @@
 package com.yjdev.goforawalk.data.remote
 
+import com.yjdev.goforawalk.data.model.AvailabilityResponse
 import com.yjdev.goforawalk.data.model.FootstepResponse
 import com.yjdev.goforawalk.data.model.FootstepsResponse
 import com.yjdev.goforawalk.data.model.IdTokenRequest
@@ -60,4 +61,10 @@ interface ApiService {
         @Header("Authorization") auth: String,
         @Body request: NicknameRequest
     ): Response<Unit>
+
+    @GET("/api/v1/footsteps/today/availability")
+    suspend fun getFootstepAvailability(
+        @Header("Authorization") token: String
+    ): Response<AvailabilityResponse>
+
 }

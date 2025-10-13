@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yjdev.goforawalk.data.local.TokenManager
+import com.yjdev.goforawalk.data.model.AvailabilityResponse
 import com.yjdev.goforawalk.data.model.Footstep
 import com.yjdev.goforawalk.data.model.Profile
 import com.yjdev.goforawalk.data.repository.FootstepRepository
@@ -142,4 +143,21 @@ class MainViewModel @Inject constructor(
     fun resetNicknameResult() {
         _nicknameUpdateResult.value = null
     }
+
+    fun checkTodayAvailability(onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            when (val result = footstepRepository.checkFootstepAvailability()) {
+                is PostResult.Success -> {
+                    val response = result.body as? AvailabilityResponse
+                    val canCreate = response?.data?.canCreateToday ?: true
+                    onResult(canCreate)
+                }
+
+                is PostResult.Failure -> {
+                    onResult(true)
+                }
+            }
+        }
+    }
+
 }

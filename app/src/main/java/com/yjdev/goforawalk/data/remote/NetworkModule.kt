@@ -23,7 +23,7 @@ object NetworkModule {
     @Provides
     fun provideAuthService(): ApiService {
         return Retrofit.Builder()
-            .baseUrl("https://api.goforawalk.site/")
+            .baseUrl("https://api-goforawalk.haero77.org/docs/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

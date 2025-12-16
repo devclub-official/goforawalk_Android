@@ -1,12 +1,11 @@
 package com.yjdev.goforawalk.data.repository
 
 import com.google.gson.Gson
-import com.yjdev.goforawalk.data.remote.ApiService
 import com.yjdev.goforawalk.data.model.ErrorResponse
-import com.yjdev.goforawalk.domain.model.PostResult
 import com.yjdev.goforawalk.data.model.Footstep
 import com.yjdev.goforawalk.data.model.Profile
-import com.yjdev.goforawalk.data.local.TokenManager
+import com.yjdev.goforawalk.data.remote.ApiService
+import com.yjdev.goforawalk.domain.model.PostResult
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -15,28 +14,21 @@ import java.io.File
 import javax.inject.Inject
 
 class FootstepRepository @Inject constructor(
-    private val apiService: ApiService,
-    private val tokenManager: TokenManager
+    private val apiService: ApiService
 ) {
-    private fun getAuthToken(): String? {
-        return tokenManager.getToken()?.let { "Bearer $it" }
-    }
 
     suspend fun fetchFootsteps(): Result<List<Footstep>> = runCatching {
-        val token = getAuthToken() ?: throw Exception("No token")
-        val response = apiService.getFootstepsWithAuth(token)
+        val response = apiService.getFootsteps()
         response.data.footsteps
     }
 
     suspend fun fetchUserProfile(): Result<Profile> = runCatching {
-        val token = getAuthToken() ?: throw Exception("No token")
-        val response = apiService.getProfileWithAuth(token)
+        val response = apiService.getProfile()
         response.data
     }
 
     suspend fun deleteFootstep(id: Int): Result<Unit> = runCatching {
-        val token = getAuthToken() ?: throw Exception("No token")
-        val response = apiService.deleteFootstep(token, id)
+        val response = apiService.deleteFootstep(id)
         if (!response.isSuccessful) {
             throw Exception("삭제 실패: ${response.code()}")
         }
@@ -44,15 +36,10 @@ class FootstepRepository @Inject constructor(
 
     suspend fun postFootstep(imageFile: File, content: String): PostResult {
         return try {
-            val token = getAuthToken() ?: return PostResult.Failure(
-                errorCode = null,
-                errorMsg = "토큰 없음"
-            )
-
             val imagePart = createImagePart(imageFile)
             val contentPart = content.toRequestBody("text/plain".toMediaTypeOrNull())
 
-            val response = apiService.postFootstep(token, imagePart, contentPart)
+            val response = apiService.postFootstep(imagePart, contentPart)
 
             if (response.isSuccessful) {
                 PostResult.Success(response.body())
@@ -80,12 +67,7 @@ class FootstepRepository @Inject constructor(
 
     suspend fun checkFootstepAvailability(): PostResult {
         return try {
-            val token = getAuthToken() ?: return PostResult.Failure(
-                errorCode = null,
-                errorMsg = "토큰 없음"
-            )
-
-            val response = apiService.getFootstepAvailability(token)
+            val response = apiService.getFootstepAvailability()
 
             if (response.isSuccessful) {
                 PostResult.Success(response.body())

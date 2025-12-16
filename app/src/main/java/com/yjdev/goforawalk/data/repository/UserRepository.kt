@@ -1,19 +1,15 @@
 package com.yjdev.goforawalk.data.repository
 
-import com.yjdev.goforawalk.data.local.TokenManager
 import com.yjdev.goforawalk.data.model.NicknameRequest
 import com.yjdev.goforawalk.data.remote.ApiService
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val apiService: ApiService,
-    private val tokenManager: TokenManager
+    private val apiService: ApiService
 ) {
     suspend fun deleteAccount(): Result<Unit> {
-        val token = tokenManager.getToken() ?: return Result.failure(Exception("토큰 없음"))
-
         return kotlin.runCatching {
-            val response = apiService.deleteAccount("Bearer $token")
+            val response = apiService.deleteAccount()
             if (response.isSuccessful) {
                 Result.success(Unit)
             } else {
@@ -25,10 +21,8 @@ class UserRepository @Inject constructor(
     }
 
     suspend fun updateNickname(newNickname: String): Result<Unit> {
-        val token = tokenManager.getToken() ?: return Result.failure(Exception("토큰 없음"))
-
         return kotlin.runCatching {
-            val response = apiService.updateNickname("Bearer $token", NicknameRequest(newNickname))
+            val response = apiService.updateNickname(NicknameRequest(newNickname))
             if (response.isSuccessful) {
                 Result.success(Unit)
             } else {

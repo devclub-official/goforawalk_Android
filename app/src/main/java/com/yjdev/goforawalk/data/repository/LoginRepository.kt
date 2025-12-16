@@ -54,11 +54,17 @@ class LoginRepository @Inject constructor(
 
     private suspend fun loginToServer(idToken: String): LoginResult {
         return try {
-            val response = apiService.loginWithOAuth(request = IdTokenRequest(idToken = idToken))
+            val response = apiService.loginWithOAuth(
+                request = IdTokenRequest(idToken = idToken)
+            )
+
             if (response.isSuccessful) {
-                val token = response.body()?.data?.credentials?.accessToken
-                if (token != null) {
-                    tokenManager.saveToken(token)
+                val credentials = response.body()?.data?.credentials
+
+                if (credentials != null) {
+                    tokenManager.saveAccessToken(credentials.accessToken)
+                    tokenManager.saveRefreshToken(credentials.refreshToken)
+
                     LoginResult.Success
                 } else {
                     LoginResult.Failure("서버 응답에 토큰 없음")
@@ -70,6 +76,7 @@ class LoginRepository @Inject constructor(
             LoginResult.Failure("서버 로그인 실패: ${e.message}")
         }
     }
+
 }
 
 

@@ -33,4 +33,24 @@ class TokenManager @Inject constructor(
     fun clearToken() {
         sharedPreferences.edit().remove("access_token").apply()
     }
+
+    fun saveAccessToken(token: String) {
+        sharedPreferences.edit().putString("access_token", token).apply()
+    }
+
+    fun saveRefreshToken(token: String) {
+        sharedPreferences.edit().putString("refresh_token", token).apply()
+    }
+
+    fun getAccessToken(): String? {
+        return sharedPreferences.getString("access_token", null)
+    }
+
+    fun getRefreshToken(): String? {
+        return sharedPreferences.getString("refresh_token", null)
+    }
+
+    fun clearAll() {
+        sharedPreferences.edit().clear().apply()
+    }
 }

@@ -3,6 +3,11 @@ package com.yjdev.goforawalk.presentation.ui.screen
 import android.Manifest
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,6 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.yjdev.goforawalk.R
 import com.yjdev.goforawalk.data.model.Profile
 import com.yjdev.goforawalk.presentation.state.Screen
 import com.yjdev.goforawalk.presentation.ui.theme.Goforawalk_AndroidTheme
@@ -35,7 +42,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostController) {
     val navController = rememberNavController()
-    val items = listOf(Screen.Home, Screen.Certify, Screen.Profile)
+    val items = listOf(
+        Screen.Home,
+        Screen.Calendar,
+        Screen.Profile
+    )
+
     val profile by viewModel.profile.collectAsState()
     val list by viewModel.itemList.collectAsState()
     val context = LocalContext.current
@@ -50,40 +62,60 @@ fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostControlle
         val currentRoute = currentRoute(navController)
 
         Scaffold(
+            floatingActionButton = {
+                if (currentRoute in listOf(
+                        Screen.Home.route,
+                        Screen.Calendar.route,
+                        Screen.Profile.route
+                    )
+                ) {
+                    FloatingActionButton(
+                        containerColor = MainColor,
+                        onClick = {
+                            coroutineScope.launch {
+                                viewModel.checkTodayAvailability { canCreate ->
+                                    if (canCreate) {
+                                        navController.navigate(Screen.Certify.route)
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "오늘은 이미 발자취를 남겼어요. 내일도 남겨볼까요?",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            },
             bottomBar = {
-                if (currentRoute in listOf(Screen.Home.route, Screen.Profile.route)) {
+                if (currentRoute in listOf(Screen.Home.route, Screen.Calendar.route, Screen.Profile.route)) {
                     NavigationBar {
                         items.forEach { screen ->
                             NavigationBarItem(
                                 selected = currentRoute == screen.route,
                                 onClick = {
                                     if (currentRoute != screen.route) {
-                                        if (screen == Screen.Certify) {
-                                            coroutineScope.launch {
-                                                viewModel.checkTodayAvailability { canCreate ->
-                                                    if (canCreate) {
-                                                        navController.navigate(Screen.Certify.route) {
-                                                            popUpTo(Screen.Home.route) { inclusive = false }
-                                                            launchSingleTop = true
-                                                        }
-                                                    } else {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "오늘은 이미 발자취를 남겼어요. 내일도 남겨볼까요?",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            navController.navigate(screen.route) {
-                                                popUpTo(Screen.Home.route) { inclusive = false }
-                                                launchSingleTop = true
-                                            }
+                                        navController.navigate(screen.route) {
+                                            popUpTo(Screen.Home.route) { inclusive = false }
+                                            launchSingleTop = true
                                         }
                                     }
                                 },
-                                icon = { Icon(painterResource(id = screen.icon), contentDescription = screen.label) },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(id = screen.icon),
+                                        contentDescription = screen.label,
+                                        modifier = Modifier.size(28.dp)
+                                    )
+                                },
                                 label = { Text(screen.label) },
                                 colors = NavigationBarItemColors(
                                     selectedIconColor = MainColor,
@@ -106,6 +138,9 @@ fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostControlle
                         viewModel,
                         onNavigateToCertify = { navController.navigate(Screen.Certify.route) }
                     )
+                }
+                composable(Screen.Calendar.route) {
+                    CalendarScreen(viewModel = viewModel)
                 }
                 composable(Screen.Certify.route) { CertifyScreen(viewModel, onFinish = { navController.popBackStack() }) }
                 composable(Screen.Profile.route) {

@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.yjdev.goforawalk"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 7
         versionName = "1.2"
@@ -76,6 +76,8 @@ dependencies {
     implementation(libs.okhttp3)
     implementation(libs.okhttp3.interceptor)
     implementation(libs.androidx.exifinterface)
+    implementation(libs.kizitonwose.calendar.compose)
+    implementation(libs.androidx.ui.test.android)
     ksp(libs.dagger.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

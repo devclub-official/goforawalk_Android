@@ -18,6 +18,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -55,4 +56,10 @@ interface ApiService {
 
     @GET("/api/v1/footsteps/today/availability")
     suspend fun getFootstepAvailability(): Response<AvailabilityResponse>
+
+    @GET("/api/v1/footsteps/calendar")
+    suspend fun getFootstepsByCalendar(
+        @Query("startDate") startDate: String,
+        @Query("endDate") endDate: String
+    ): FootstepsResponse
 }

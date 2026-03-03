@@ -142,7 +142,19 @@ fun MainScreen(viewModel: MainViewModel, rootNavHostController: NavHostControlle
                 composable(Screen.Calendar.route) {
                     CalendarScreen(viewModel = viewModel)
                 }
-                composable(Screen.Certify.route) { CertifyScreen(viewModel, onFinish = { navController.popBackStack() }) }
+                composable(Screen.Certify.route) {
+                    CertifyScreen(
+                        viewModel = viewModel,
+                        onFinish = {
+                            navController.navigate(Screen.Home.route) {
+                                popUpTo(Screen.Certify.route) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
                 composable(Screen.Profile.route) {
                     ProfileScreen(
                         profile = profile ?: Profile(

@@ -85,4 +85,15 @@ class FootstepRepository @Inject constructor(
         }
     }
 
+    suspend fun fetchFootstepsByCalendar(
+        startDate: String,
+        endDate: String
+    ): Result<List<Footstep>> = runCatching {
+        val response = apiService.getFootstepsByCalendar(
+            startDate = startDate,
+            endDate = endDate
+        )
+        response.data.footsteps
+    }
+
 }

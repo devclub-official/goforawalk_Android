@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
+import java.time.LocalDate
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,6 +55,12 @@ class MainViewModel @Inject constructor(
 
     private val _nicknameUpdateResult = MutableStateFlow<Result<Unit>?>(null)
     val nicknameUpdateResult: StateFlow<Result<Unit>?> = _nicknameUpdateResult
+
+    private val _calendarFootsteps =
+        MutableStateFlow<Map<LocalDate, List<Footstep>>>(emptyMap())
+
+    val calendarFootsteps: StateFlow<Map<LocalDate, List<Footstep>>> =
+        _calendarFootsteps.asStateFlow()
 
     fun getToken(): String? = tokenManager.getToken()
 
@@ -159,5 +167,28 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    fun loadCalendarFootsteps(year: Int, month: Int) {
+        val startDate = LocalDate.of(year, month, 1)
+        val endDate = YearMonth.of(year, month).atEndOfMonth()
+
+        viewModelScope.launch {
+            footstepRepository.fetchFootstepsByCalendar(
+                startDate.toString(),
+                endDate.toString()
+            ).onSuccess { footsteps ->
+
+                val grouped = footsteps.groupBy {
+                    LocalDate.parse(it.date)
+                }
+
+                _calendarFootsteps.value = grouped
+            }.onFailure {
+                Log.e("Calendar", "캘린더 발자취 조회 실패", it)
+            }
+        }
+    }
+
+
 
 }
